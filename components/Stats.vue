@@ -12,18 +12,19 @@
       />
     </div>
 
-    <!-- Scroll buttons (mobile only) -->
+    <!-- Buttons (mobile only) -->
     <button
+      v-if="currentIndex > 0"
       class="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 md:hidden"
       @click="prev"
-      :disabled="currentIndex === 0"
     >
       <ChevronLeft />
     </button>
+
     <button
+      v-if="currentIndex < stats.length - 1"
       class="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 md:hidden"
       @click="next"
-      :disabled="currentIndex === stats.length - 1"
     >
       <ChevronRight />
     </button>
@@ -97,10 +98,10 @@
   let currentIndex = ref(0);
 
   const next = () => {
-    if (currentIndex < stats.length - 1) currentIndex++;
+    if (currentIndex.value < stats.length - 1) currentIndex.value++;
   };
 
   const prev = () => {
-    if (currentIndex > 0) currentIndex--;
+    if (currentIndex.value > 0) currentIndex.value--;
   };
 </script>

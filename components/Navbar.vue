@@ -5,22 +5,26 @@
     >
       <!-- Logo -->
       <div class="flex items-center space-x-2">
-        <router-link to="/" class="cursor-pointer">
+        <NuxtLink to="/" class="cursor-pointer">
           <img src="/header.png" alt="Logo" class="h-12 w-auto" />
-        </router-link>
+        </NuxtLink>
       </div>
 
       <!-- Nav Links -->
       <nav class="hidden md:flex items-center space-x-8 font-medium">
         <div class="flex space-x-8 text-[#42529F] font-bold">
-          <a href="#" class="hover:text-[#d63384] transition">About Us</a>
-          <a href="#" class="hover:text-[#d63384] transition">Academics</a>
-          <a href="#" class="hover:text-[#d63384] transition">Admissions</a>
-          <a href="#" class="hover:text-[#d63384] transition">School Life</a>
-          <a href="#" class="hover:text-[#d63384] transition"
-            >Parent Resources</a
+          <NuxtLink
+            v-for="(item, i) in navItems"
+            :key="i"
+            :to="item.to"
+            class="nav-link"
+            :class="{ active: route.path === item.to }"
           >
+            <span class="prefix">{{ item.label.slice(0, 3) }}</span
+            >{{ item.label.slice(3) }}
+          </NuxtLink>
         </div>
+
         <div class="w-px h-6 bg-black mx-2"></div>
 
         <button
@@ -35,11 +39,53 @@
 </template>
 
 <script setup>
-  // No script logic needed for this static navbar
+  const route = useRoute();
+
+  const navItems = [
+    { label: "About Us", to: "/about" },
+    { label: "Academics", to: "/academics" },
+    { label: "Admissions", to: "/admissions" },
+    { label: "School Life", to: "/school-life" },
+    { label: "Parent Resources", to: "/parent-resources" },
+  ];
+
+  const activeLink = ref("");
 </script>
 
 <style scoped>
-  .font-helvetica {
-    font-family: Helvetica, Arial, sans-serif;
+  .nav-link {
+    @apply relative font-bold text-[#42529F] transition;
+  }
+
+  .nav-link .prefix {
+    position: relative;
+    z-index: 1;
+    padding: 4px 0 4px 5px; /* Top, bottom, and left padding */
+    display: inline-block;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0;
+    height: 2.4em;
+    background-color: #42529f;
+    transform: translateY(-50%);
+    border-radius: 0.25rem;
+    transition: width 0.3s ease;
+    z-index: 0;
+  }
+
+  .nav-link:hover::before,
+  .nav-link.active::before {
+    width: calc(3ch + 10px); /* 3 letters + 5px left + 5px buffer */
+  }
+
+  .nav-link:hover .prefix,
+  .nav-link.active .prefix {
+    color: white;
   }
 </style>

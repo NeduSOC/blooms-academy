@@ -8,12 +8,12 @@
 
     <!-- Blue Overlay -->
     <div
-      class="absolute inset-0 bg-blue-950 bg-opacity-80 transition-opacity duration-500 group-hover:bg-opacity-0"
+      class="absolute inset-0 bg-blue-950 bg-opacity-80 md:group-hover:bg-opacity-0 transition-opacity duration-500"
     ></div>
 
     <!-- Red Decoration - Left -->
     <div
-      class="absolute top-1/2 left-[-10px] -translate-y-[40%] h-4 bg-red-600 transition-all duration-500 w-8 group-hover:w-1/3"
+      class="absolute top-1/2 left-[-10px] -translate-y-[40%] h-4 bg-red-600 transition-all duration-500 w-1/3 md:w-8 md:group-hover:w-1/3"
     ></div>
 
     <!-- Red Decoration - Right -->
@@ -27,12 +27,12 @@
     >
       <!-- Outer Circle -->
       <div
-        class="w-96 h-96 rounded-full bg-white opacity-5 scale-0 group-hover:scale-100 transition-transform duration-500"
+        class="w-96 h-96 rounded-full bg-white opacity-5 scale-100 md:scale-0 md:group-hover:scale-100 transition-transform duration-500"
       ></div>
 
       <!-- Inner Circle -->
       <div
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-white opacity-15 scale-0 group-hover:scale-100 transition-transform duration-500"
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-white opacity-15 scale-100 md:scale-0 md:group-hover:scale-100 transition-transform duration-500"
       ></div>
     </div>
 
@@ -44,29 +44,31 @@
 
       <!-- Dotted line above -->
       <div
-        class="w-3/4 border-t-4 border-dotted border-white my-4 transition-opacity duration-500 group-hover:opacity-0"
+        class="w-3/4 border-t-4 border-dotted border-white my-4 hidden md:block md:transition-opacity duration-500 md:group-hover:opacity-0"
       ></div>
 
-      <!-- Age Range (visible initially, hides on hover) -->
-      <p class="text-lg transition-opacity duration-500 group-hover:opacity-0">
+      <!-- Age Range -->
+      <p
+        class="text-lg hidden md:block md:transition-opacity duration-500 md:group-hover:opacity-0"
+      >
         {{ ageRange }}
       </p>
 
       <!-- Dotted line below -->
       <div
-        class="w-3/4 border-t-4 border-dotted border-white my-4 transition-opacity duration-500 group-hover:opacity-0"
+        class="w-3/4 border-t-4 border-dotted border-white my-4 hidden md:block md:transition-opacity duration-500 md:group-hover:opacity-0"
       ></div>
 
       <!-- Hover Text (visible only on hover) -->
       <p
-        class="absolute w-4/5 text-white text-xl font-semibold opacity-0 transition-opacity duration-500 text-center group-hover:opacity-100"
+        class="w-4/5 text-white text-xl font-semibold text-center opacity-100 md:absolute md:opacity-0 md:transition-opacity duration-500 md:group-hover:opacity-100"
       >
         {{ hoverText }}
       </p>
 
       <!-- Learn More Button (shows on hover) -->
       <button
-        class="relative z-10 mt-4 px-6 py-2 text-2xl border border-white text-white font-medium transition-opacity duration-500 opacity-0 group-hover:opacity-100"
+        class="relative z-10 mt-4 px-6 py-2 text-2xl border border-white text-white font-medium opacity-100 md:opacity-0 md:transition-opacity duration-500 md:group-hover:opacity-100"
       >
         Learn More
       </button>
