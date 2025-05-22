@@ -17,6 +17,6 @@
 </template>
 
 <script setup>
-  import Stats from "~/components/Stats.vue";
-  import WorldMap from "~/components/WorldMap.vue";
+  import Stats from "~/components/Landing/Stats.vue";
+  import WorldMap from "~/components/Landing/WorldMap.vue";
 </script>

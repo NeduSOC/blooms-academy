@@ -22,5 +22,5 @@
 </template>
 
 <script setup>
-  import EducationStageCard from "~/components/EducationStageCard.vue";
+  import EducationStageCard from "~/components/Landing/EducationStageCard.vue";
 </script>
