@@ -68,6 +68,7 @@
 
       <!-- Learn More Button (shows on hover) -->
       <button
+        @click="navigateToLink"
         class="relative z-10 mt-4 px-6 py-2 text-2xl border border-white text-white font-medium opacity-100 md:opacity-0 md:transition-opacity duration-500 md:group-hover:opacity-100"
       >
         Learn More
@@ -77,10 +78,21 @@
 </template>
 
 <script setup>
-  defineProps({
+  import { useRouter } from "vue-router";
+
+  const { link } = defineProps({
     title: String,
     ageRange: String,
     image: String,
     hoverText: String,
+    link: String,
   });
+
+  const router = useRouter();
+
+  function navigateToLink() {
+    if (link) {
+      router.push(link);
+    }
+  }
 </script>
