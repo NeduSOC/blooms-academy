@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
       <!-- Logo -->
       <NuxtLink to="/" class="cursor-pointer">
-        <img src="/logo.png" alt="Saint Thomas Episcopal School" class="h-10 w-auto" />
+        <img src="/logo.png" alt="Saint Thomas Episcopal School" class="h-16 w-auto" />
       </NuxtLink>
 
       <!-- Desktop Navigation -->
