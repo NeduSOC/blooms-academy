@@ -1,308 +1,499 @@
 <template>
-  <header class="bg-white font-montreal shadow-md relative z-50">
-    <div
-      class="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-4"
-    >
+  <header class="bg-white shadow-sm relative z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
       <!-- Logo -->
       <NuxtLink to="/" class="cursor-pointer">
-        <img src="/header.png" alt="Logo" class="h-12 w-auto" />
+        <img src="/logo.png" alt="Saint Thomas Episcopal School" class="h-10 w-auto" />
       </NuxtLink>
 
-      <!-- Desktop Nav -->
-      <nav class="hidden md:flex items-center space-x-8 font-medium relative">
-        <div class="flex space-x-8 text-[#42529F] font-bold">
-          <NuxtLink
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-8">
+        <div class="flex items-center space-x-8">
+          <div
             v-for="(item, i) in navItems"
             :key="i"
-            :to="item.to || '#'"
-            class="nav-link relative"
-            :class="{
-              active:
-                (route.path.startsWith('/admissions') &&
-                  item.label === 'Admissions') ||
-                route.path === item.to,
-            }"
-            @click.prevent="item.label === 'Admissions' && toggleDropdown"
-            @mouseenter="item.label === 'Admissions' && (showDropdown = true)"
-            @mouseleave="item.label === 'Admissions' && (showDropdown = false)"
+            class="relative nav-item"
           >
-            <span class="prefix">{{ item.label.slice(0, 3) }}</span
-            >{{ item.label.slice(3) }}
-
-            <!-- Dropdown -->
-            <div
-              v-if="item.label === 'Admissions' && showDropdown"
-              class="absolute top-full left-0 mt-2 w-72 bg-white shadow-lg border border-gray-200 z-50 rounded-md pt-2 pb-2"
-              @mouseenter="showDropdown = true"
-              @mouseleave="showDropdown = false"
+            <NuxtLink
+              v-if="!item.hasDropdown"
+              :to="item.to"
+              class="nav-link text-[#42529F] font-medium hover:text-white hover:bg-[#42529F] transition-colors duration-200 px-4 py-4"
+              :class="{ 'active': isActive(item) }"
             >
-              <NuxtLink
-                v-for="(child, idx) in admissionsSubLinks"
-                :key="idx"
-                :to="child.to"
-                class="flex items-center space-x-3 px-5 py-2.5 hover:bg-gray-100 text-[#42529F] font-medium"
-                :class="{ 'font-semibold': route.path === child.to }"
+              {{ item.label }}
+            </NuxtLink>
+
+            <!-- Dropdown trigger -->
+            <div
+              v-else
+              class="dropdown-container"
+              @mouseenter="showDropdown(item.label)"
+              @mouseleave="hideDropdown(item.label)"
+            >
+              <button
+                class="nav-link text-[#42529F] font-medium hover:text-white hover:bg-[#42529F] transition-colors duration-200 px-4 py-4 flex items-center gap-1"
+                :class="{ 'active': isActive(item) }"
+                @click="handleDropdownClick(item.label, item.to)"
               >
-                <span
-                  class="w-2 h-2 rounded-full border-2"
-                  :class="
-                    route.path === child.to
-                      ? 'bg-[#42529F] border-[#42529F]'
-                      : 'border-[#42529F]'
-                  "
-                ></span>
-                <span>{{ child.label }}</span>
-              </NuxtLink>
+                {{ item.label }}
+                <Icon 
+                  name="heroicons:chevron-down" 
+                  class="w-3 h-3 transition-transform duration-300"
+                  :class="{ 'rotate-180': dropdownStates[item.label] }"
+                />
+              </button>
+
+              <!-- Dropdown Menu -->
+              <Transition name="dropdown">
+                <div
+                  v-if="item.hasDropdown && dropdownStates[item.label]"
+                  class="dropdown-menu absolute top-full left-0 mt-1 bg-white shadow-xl border border-gray-100 rounded-lg py-3 z-50 flex"
+                >
+                  <div class="dropdown-content px-2">
+                    <NuxtLink
+                      v-for="(subItem, idx) in item.dropdown"
+                      :key="idx"
+                      :to="subItem.to"
+                      class="dropdown-item block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#42529F] rounded-md transition-all duration-200 font-medium"
+                      @click="closeDropdown(item.label)"
+                    >
+                      {{ subItem.label }}
+                    </NuxtLink>
+                  </div>
+                  <div class="flex-1 border-l border-gray-200"></div>
+                  <div class="dropdown-image-container">
+                    <img class="dropdown-image" src="@/assets/img/admission.jpg" alt="Admission" />
+                  </div>
+                </div>
+              </Transition>
             </div>
-          </NuxtLink>
+          </div>
         </div>
 
-        <div class="w-px h-6 bg-black mx-2"></div>
-
-        <!-- Desktop Login Button -->
-        <button
-          class="login-btn group relative flex px-5 py-2 font-helvetica text-white overflow-hidden w-[110px] justify-start"
+        <!-- Login Button -->
+        <button 
+          class="login-btn bg-[#42529F] text-white px-6 py-2 rounded hover:bg-[#2a3a7a] transition-all duration-200 flex items-center space-x-2"
+          @click="handleLogin"
         >
-          <div
-            class="flex items-center gap-2 w-full transition-all duration-300 group-hover:justify-center"
-          >
-            <span class="icon-wrapper w-[18px] flex justify-center">
-              <LogIn size="18" class="icon transition-all duration-300" />
-            </span>
-            <span class="label relative z-10">Login</span>
-          </div>
+          <Icon name="heroicons:lock-closed" class="w-4 h-4" />
+          <span>Login</span>
         </button>
       </nav>
 
-      <!-- Hamburger (Mobile Only) -->
-      <button class="md:hidden" @click="isMobileOpen = true">
-        <Menu size="26" class="text-[#42529F]" />
+      <!-- Mobile Menu Button -->
+      <button
+        class="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
+        @click="toggleMobileMenu"
+        :aria-expanded="isMobileMenuOpen"
+        aria-label="Toggle mobile menu"
+      >
+        <Icon 
+          :name="isMobileMenuOpen ? 'heroicons:x-mark' : 'heroicons:bars-3'" 
+          class="w-6 h-6 text-[#42529F]" 
+        />
       </button>
     </div>
 
-    <!-- Mobile Navigation Drawer -->
-    <transition name="fade">
+    <!-- Mobile Navigation -->
+    <Transition name="mobile-menu">
       <div
-        v-show="isMobileOpen"
-        class="fixed inset-0 bg-black bg-opacity-50 z-50"
+        v-if="isMobileMenuOpen"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden"
+        @click="closeMobileMenu"
       >
-        <!-- Click outside to close -->
-        <div class="absolute inset-0" @click="isMobileOpen = false"></div>
+        <div
+          class="absolute right-0 top-0 w-80 max-w-full h-full bg-white shadow-xl overflow-y-auto"
+          @click.stop
+        >
+          <!-- Mobile Header -->
+          <div class="flex justify-between items-center p-6 border-b border-gray-200">
+            <img src="/logo.png" alt="Logo" class="h-8 w-auto" />
+            <button 
+              @click="closeMobileMenu" 
+              class="p-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
+              aria-label="Close mobile menu"
+            >
+              <Icon name="heroicons:x-mark" class="w-6 h-6 text-[#42529F]" />
+            </button>
+          </div>
 
-        <!-- Slide-out mobile drawer -->
-        <transition name="slide-in">
-          <div
-            v-show="isMobileOpen"
-            class="absolute right-0 top-0 w-80 max-w-full h-full bg-[#42529F] p-6 shadow-xl z-50 flex flex-col"
-          >
-            <!-- Header -->
-            <div class="flex justify-end items-center mb-8">
-              <button
-                @click="isMobileOpen = false"
-                class="flex items-center space-x-2 text-white"
-              >
-                <span>Close</span>
-                <X size="24" font-weight="600" />
-              </button>
-            </div>
+          <!-- Mobile Nav Items -->
+          <div class="py-4">
+            <div v-for="(item, i) in navItems" :key="i" class="border-b border-gray-100 last:border-b-0">
+              <div class="px-6 py-3">
+                <button
+                  v-if="item.hasDropdown"
+                  @click="toggleMobileDropdown(item.label)"
+                  class="flex items-center justify-between w-full text-left text-[#42529F] font-medium hover:text-[#2a3a7a] transition-colors duration-200"
+                  :class="{ 'text-[#2a3a7a]': isActive(item) }"
+                >
+                  <span>{{ item.label }}</span>
+                  <Icon
+                    name="heroicons:chevron-down"
+                    class="w-4 h-4 transition-transform duration-200"
+                    :class="{ 'rotate-180': mobileDropdownStates[item.label] }"
+                  />
+                </button>
+                <NuxtLink
+                  v-else
+                  :to="item.to"
+                  class="block text-[#42529F] font-medium hover:text-[#2a3a7a] transition-colors duration-200"
+                  :class="{ 'text-[#2a3a7a] font-semibold': isActive(item) }"
+                  @click="closeMobileMenu"
+                >
+                  {{ item.label }}
+                </NuxtLink>
 
-            <!-- Nav Items -->
-
-            <div class="space-y-4 text-white font-semibold">
-              <div v-for="(item, i) in navItems" :key="i">
-                <div>
-                  <NuxtLink
-                    :to="item.to || '#'"
-                    @click="() => handleMobileNavClick(item)"
-                    class="flex items-center justify-between text-base pb-3"
-                  >
-                    <span>{{ item.label }}</span>
-                    <ChevronRight
-                      v-if="item.label === 'Admissions'"
-                      :class="{ '-rotate-90': showMobileDropdown }"
-                      class="transition-transform"
-                    />
-                    <ChevronRight v-else />
-                  </NuxtLink>
-
-                  <!-- Admissions Dropdown -->
+                <!-- Mobile Dropdown -->
+                <Transition name="mobile-dropdown">
                   <div
-                    v-if="item.label === 'Admissions' && showMobileDropdown"
-                    class="ml-4 mt-2 space-y-3"
+                    v-if="item.hasDropdown && mobileDropdownStates[item.label]"
+                    class="mt-3 ml-4 space-y-2"
                   >
                     <NuxtLink
-                      v-for="(child, idx) in admissionsSubLinks"
+                      v-for="(subItem, idx) in item.dropdown"
                       :key="idx"
-                      :to="child.to"
-                      class="flex items-center space-x-3 text-sm font-medium"
-                      @click="isMobileOpen = false"
+                      :to="subItem.to"
+                      class="block text-sm text-gray-600 hover:text-[#42529F] py-2 px-2 rounded transition-colors duration-200"
+                      @click="closeMobileMenu"
                     >
-                      <span
-                        class="w-2 h-2 rounded-full border-2"
-                        :class="
-                          route.path === child.to
-                            ? 'bg-white border-white'
-                            : 'border-white'
-                        "
-                      ></span>
-                      <span>{{ child.label }}</span>
+                      {{ subItem.label }}
                     </NuxtLink>
                   </div>
-
-                  <!-- Line under each item -->
-                  <div
-                    class="border-b border-white border-opacity-30 mt-2"
-                  ></div>
-                </div>
+                </Transition>
               </div>
             </div>
+          </div>
 
-            <!-- Login Button -->
-            <button
-              class="mt-8 bg-white text-[#42529F] w-full py-2 flex items-center justify-center space-x-2"
+          <!-- Mobile Login Button -->
+          <div class="p-6 border-t border-gray-200">
+            <button 
+              class="w-full bg-[#42529F] text-white py-3 px-4 rounded hover:bg-[#2a3a7a] transition-all duration-200 flex items-center justify-center space-x-2"
+              @click="handleLogin"
             >
-              <LogIn size="18" />
+              <Icon name="heroicons:lock-closed" class="w-4 h-4" />
               <span>Login</span>
             </button>
           </div>
-        </transition>
+        </div>
       </div>
-    </transition>
+    </Transition>
   </header>
 </template>
 
 <script setup>
-  import { ref } from "vue";
-  import { useRoute } from "vue-router";
-  import { Menu, X, ChevronDown, LogIn } from "lucide-vue-next";
 
-  const route = useRoute();
-  const showDropdown = ref(false);
-  const isMobileOpen = ref(false);
-  const mobileDropdown = ref(false);
+const route = useRoute()
+const router = useRouter()
 
-  const showMobileDropdown = ref(false);
+// State management
+const isMobileMenuOpen = ref(false)
+const dropdownStates = reactive({})
+const mobileDropdownStates = reactive({})
 
-  function handleMobileNavClick(item) {
-    if (item.label === "Admissions") {
-      showMobileDropdown.value = !showMobileDropdown.value;
+// Dropdown timeout for better UX
+let dropdownTimeout = null
+
+// Navigation items
+const navItems = [
+  { label: "About", to: "/about" },
+  { 
+    label: "Admissions", 
+    to: "/",
+    hasDropdown: true,
+    dropdown: [
+      // { label: "Admissions Overview", to: "/admissions" },
+      { label: "Early Years Program", to: "/admissions/early-years" },
+      { label: "Primary School", to: "/admissions/primary" },
+      { label: "Secondary School", to: "/admissions/secondary" },
+      { label: "Apply Now", to: "/admissions/apply" },
+      { label: "Tuition & Financial Aid", to: "/admissions/tuition" }
+    ]
+  },
+  { label: "Academics", to: "/academics" },
+  { label: "Arts", to: "/arts" },
+  { label: "Athletics", to: "/athletics" },
+  { label: "Giving", to: "/giving" }
+]
+
+// Methods
+const isActive = (item) => {
+  if (item.hasDropdown) {
+    return item.dropdown?.some(subItem => route.path === subItem.to) || route.path.startsWith('/admissions')
+  }
+  return route.path === item.to
+}
+
+const toggleDropdown = (label) => {
+  // Close other dropdowns
+  Object.keys(dropdownStates).forEach(key => {
+    if (key !== label) {
+      dropdownStates[key] = false
+    }
+  })
+  dropdownStates[label] = !dropdownStates[label]
+}
+
+const showDropdown = (label) => {
+  if (dropdownTimeout) {
+    clearTimeout(dropdownTimeout)
+  }
+  // Close other dropdowns
+  Object.keys(dropdownStates).forEach(key => {
+    if (key !== label) {
+      dropdownStates[key] = false
+    }
+  })
+  dropdownStates[label] = true
+}
+
+const hideDropdown = (label) => {
+  dropdownTimeout = setTimeout(() => {
+    dropdownStates[label] = false
+  }, 150)
+}
+
+const handleDropdownClick = (label, to) => {
+  // If dropdown has a main URL, navigate there
+  if (to) {
+    router.push(to)
+  } else {
+    // Otherwise toggle dropdown
+    toggleDropdown(label)
+  }
+}
+
+const closeDropdown = (label) => {
+  dropdownStates[label] = false
+}
+
+const closeAllDropdowns = () => {
+  Object.keys(dropdownStates).forEach(key => {
+    dropdownStates[key] = false
+  })
+}
+
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+  
+  // Prevent body scroll when mobile menu is open
+  if (isMobileMenuOpen.value) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+  document.body.style.overflow = ''
+  
+  // Reset mobile dropdown states
+  Object.keys(mobileDropdownStates).forEach(key => {
+    mobileDropdownStates[key] = false
+  })
+}
+
+const toggleMobileDropdown = (label) => {
+  mobileDropdownStates[label] = !mobileDropdownStates[label]
+}
+
+const handleLogin = () => {
+  // Add your login logic here
+  console.log('Login clicked')
+  // Example: router.push('/login')
+}
+
+// Handle escape key
+const handleEscape = (event) => {
+  if (event.key === 'Escape') {
+    if (isMobileMenuOpen.value) {
+      closeMobileMenu()
     } else {
-      isMobileOpen.value = false;
+      closeAllDropdowns()
     }
   }
+}
 
-  const navItems = [
-    { label: "About Us", to: "/about" },
-    { label: "Academics", to: "/academics" },
-    { label: "Admissions" },
-    { label: "School Life", to: "/school-life" },
-    { label: "Parent Resources", to: "/parent-resources" },
-  ];
-
-  const admissionsSubLinks = [
-    { label: "Early Years", to: "/admissions/early-years" },
-    { label: "Primary", to: "/admissions/primary" },
-    { label: "Secondary", to: "/admissions/secondary" },
-  ];
-
-  function toggleDropdown() {
-    showDropdown.value = !showDropdown.value;
+// Handle clicks outside dropdown
+const handleClickOutside = (event) => {
+  if (!event.target.closest('.nav-item')) {
+    closeAllDropdowns()
   }
+}
+
+// Initialize dropdown states
+onMounted(() => {
+  navItems.forEach(item => {
+    if (item.hasDropdown) {
+      dropdownStates[item.label] = false
+      mobileDropdownStates[item.label] = false
+    }
+  })
+  
+  // Add event listeners
+  document.addEventListener('keydown', handleEscape)
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  // Clean up event listeners
+  document.removeEventListener('keydown', handleEscape)
+  document.removeEventListener('click', handleClickOutside)
+  
+  // Reset body overflow
+  document.body.style.overflow = ''
+})
+
+// Watch route changes to close mobile menu
+watch(() => route.path, () => {
+  closeMobileMenu()
+  closeAllDropdowns()
+})
 </script>
 
 <style scoped>
-  .nav-link {
-    @apply relative font-bold text-[#42529F] transition;
-  }
-  .nav-link .prefix {
-    position: relative;
-    z-index: 1;
-    padding: 4px 0 4px 5px;
-    display: inline-block;
-    transition: color 0.3s ease;
-  }
-  .nav-link::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 0;
-    height: 2.4em;
-    background-color: #42529f;
-    transform: translateY(-50%);
-    transition: width 0.3s ease;
-    z-index: 0;
-  }
-  .nav-link:hover::before,
-  .nav-link.active::before {
-    width: calc(3ch + 10px);
-  }
-  .nav-link:hover .prefix,
-  .nav-link.active .prefix {
-    color: white;
-  }
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.3s ease;
-  }
-  .fade-enter-from,
-  .fade-leave-to {
-    opacity: 0;
-  }
-  .slide-fade-enter-active {
-    transition: all 0.3s ease;
-  }
-  .slide-fade-enter-from {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-  .slide-fade-leave-to {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
+.nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
 
-  .slide-in-enter-active,
-  .slide-in-leave-active {
-    transition: transform 0.3s ease;
-  }
-  .slide-in-enter-from,
-  .slide-in-leave-to {
-    transform: translateX(100%);
-  }
+.nav-link.active {
+  font-weight: 600;
+}
 
-  /*  LOGIN BUTTON ANIMATION  */
-  .login-btn {
-    /* blue base */
-    background-color: #42529f;
-  }
+.nav-link.active {
+  background-color: #42529F;
+  color: white;
+}
 
-  /* thin red bar (left) that expands on hover */
-  .login-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    width: 8px; /* initial red width */
-    background: #d63324; /* red */
-    transition: width 0.35s ease;
-  }
+.login-btn {
+  transition: all 0.3s ease;
+}
 
-  .login-btn:hover::before {
-    width: 100%; /* slide to full width */
-  }
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(66, 82, 159, 0.3);
+}
 
-  /* icon fades / slides away on hover */
-  .login-btn .icon {
-    transition: opacity 0.35s ease, transform 0.35s ease;
-  }
+/* Fixed dropdown menu styles */
+.dropdown-menu {
+  border-top: 8px solid #42529F !important;
+  border-radius: 0px !important;
+  min-width: 300px !important;
+  width: max-content;
+  max-width: 800px;
+}
 
-  .login-btn:hover .icon {
-    opacity: 0;
-    transform: translateX(-6px);
-  }
+.dropdown-content {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+}
 
-  /* make sure text stays above the red overlay */
-  .login-btn .label {
-    position: relative;
-    z-index: 1;
+.dropdown-image-container {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.dropdown-image {
+  max-width: 250px;
+  width: auto;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.dropdown-item {
+  border-radius: 6px;
+  font-weight: 500;
+  position: relative;
+}
+
+.dropdown-item:hover {
+  background-color: #eff6ff;
+  transform: translateX(2px);
+}
+
+.dropdown-container {
+  position: relative;
+}
+
+/* Smooth dropdown transitions */
+.dropdown-enter-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-enter-from {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+}
+
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
+}
+
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+  opacity: 0;
+}
+
+.mobile-dropdown-enter-active,
+.mobile-dropdown-leave-active {
+  transition: all 0.2s ease;
+}
+
+.mobile-dropdown-enter-from {
+  opacity: 0;
+  max-height: 0;
+}
+
+.mobile-dropdown-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+
+.mobile-dropdown-enter-to,
+.mobile-dropdown-leave-from {
+  opacity: 1;
+  max-height: 200px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 1rem;
   }
+}
+
+/* Responsive dropdown adjustments */
+@media (max-width: 1024px) {
+  .dropdown-menu {
+    max-width: 600px;
+  }
+  
+  .dropdown-image {
+    max-width: 200px;
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dropdown-menu {
+    display: none; /* Hide desktop dropdown on mobile */
+  }
+}
 </style>

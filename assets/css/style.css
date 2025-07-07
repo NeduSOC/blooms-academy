@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+
+html {
+  font-family: "Lora", Arial, Helvetica, sans-serif !important;
+  background: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+  min-height: 100vh;
+  color: #333333
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -66,19 +66,19 @@
               class="flex items-center justify-center lg:justify-start gap-3"
             >
               <MapPin />
-              <span>No. 8 Address of School, Abuja Nigeria</span>
+              <span>No. 45, Main Street, Sun City. Abuja</span>
             </div>
             <div
               class="flex items-center justify-center lg:justify-start gap-3"
             >
               <Mail />
-              <span>bloomacademy@gmail.com</span>
+              <span>info@bloomsacademy.sch.ng</span>
             </div>
             <div
               class="flex items-center justify-center lg:justify-start gap-3"
             >
               <Phone />
-              <span>+234 000 0000 0000</span>
+              <span>+234 913 909 0969</span>
             </div>
           </div>
         </div>
@@ -126,8 +126,7 @@
       <div
         class="text-center text-sm pt-6 border-t border-white border-opacity-20"
       >
-        Copyright © 2023
-        <a href="#" class="underline">Blooms Academy Suncity, Abuja</a>
+        Copyright © {{ new Date().getFullYear() }} Blooms Academy. All rights reserved.
       </div>
     </div>
   </footer>

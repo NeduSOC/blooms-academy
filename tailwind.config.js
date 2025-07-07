@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        montreal: ["'PP Neue Montreal'", "sans-serif"],
+        lora: ['Lora', 'Georgia', 'serif'],
       },
     },
   },

@@ -4,7 +4,10 @@ export default defineNuxtConfig({
   compatibility: {
     compatibilityDate: "2025-05-05",
   },
-  css: ["@/assets/css/tailwind.css"],
+  css: ["@/assets/css/style.css"],
+  modules: [
+    "@nuxt/icon",
+  ],
   postcss: {
     plugins: {
       tailwindcss: {},
