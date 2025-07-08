@@ -1,5 +1,5 @@
 <template>
-  <section class="relative w-full h-screen overflow-hidden flex flex-col">
+  <section class="relative w-full h-[90vh] overflow-hidden flex flex-col">
     <!-- Background videos -->
     <video
       v-for="(video, index) in videos"
@@ -32,25 +32,6 @@
         learners dedicated to achieving greatness and making a positive impact.
       </p>
     </div>
-
-    <!-- Carousel buttons at bottom -->
-    <div class="relative z-10 flex justify-center pb-8">
-      <div class="flex space-x-2">
-        <button
-          v-for="(video, index) in videos"
-          :key="index"
-          @click="setActive(index)"
-          :class="[
-            'rounded-full border border-white transition-colors duration-300',
-            activeIndex === index
-              ? 'bg-white'
-              : 'bg-white/30 hover:bg-white/60',
-            'w-2 h-2 ',
-          ]"
-          aria-label="'Select video ' + (index + 1)"
-        ></button>
-      </div>
-    </div>
   </section>
 </template>
 
@@ -58,7 +39,7 @@
   import { ref } from "vue";
 
   // List your video URLs (in public folder)
-  const videos = ["teacher.mp4", "teacher.mp4", "teacher.mp4"];
+  const videos = ["video.mp4"];
 
   const activeIndex = ref(0);
 
