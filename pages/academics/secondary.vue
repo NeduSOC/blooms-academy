@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AdmissionsHero background="/nursery.jpg" />
+    <AdmissionsHero background="/sec.jpg" />
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="text-[#42529F] text-4xl font-medium">Secondary School (Keystages 3 and 4)</div>
         <div class="flex flex-col md:flex-row justify-between gap-10">
