@@ -210,15 +210,24 @@ const navItems = [
       { label: "Secondary School (Keystages 3 and 4)", to: "/academics/secondary" },
       { label: "Activities & Clubs", to: "/academics/clubs" },
     ] },
-  { label: "Arts", to: "/" },
-  { label: "Athletics", to: "/" },
-  { label: "Giving", to: "/" }
+  { label: "Arts", to: "/art" },
+  { label: "Athletics", to: "/athletics" },
+  { label: "Giving", to: "/giving" }
 ]
 
 // Methods
 const isActive = (item) => {
   if (item.hasDropdown) {
-    return item.dropdown?.some(subItem => route.path === subItem.to) || route.path.startsWith('/admissions')
+    // Check if any dropdown item matches the current route
+    const hasActiveDropdownItem = item.dropdown?.some(subItem => route.path === subItem.to)
+    
+    // Also check if the main dropdown route matches (for items that have both dropdown and main route)
+    const mainRouteMatches = item.to && route.path === item.to
+    
+    // Check if current route starts with the main route path (for nested routes)
+    const isNestedRoute = item.to && route.path.startsWith(item.to)
+    
+    return hasActiveDropdownItem || mainRouteMatches || isNestedRoute
   }
   return route.path === item.to
 }

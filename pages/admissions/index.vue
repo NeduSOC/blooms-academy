@@ -2,7 +2,7 @@
     <div>
         <AdmissionsHero background="/ad.jpg" />
         <div class="max-w-7xl mx-auto py-14 px-4">
-    <div class="text-[#42529F] text-4xl font-medium">Academics</div>
+    <div class="text-[#42529F] text-4xl font-medium">Admissions</div>
     <div class="text-xl text-[#42529F] uppercase font-medium mt-6">Where Every Child's Potential Blooms</div>
     <div class="mt-5 text-lg">At Blooms Academy, we do more than educate — we empower.</div>
     <div class="mt-4">Our academic programmes are designed to inspire a lifelong love for learning, nurture each child's unique strengths, and prepare them to thrive in a rapidly changing world. From the foundational years through to graduation, every stage of learning is purposeful, engaging, and built for excellence.</div>
