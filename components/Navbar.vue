@@ -1,4 +1,4 @@
-<template>
+\<template>
   <header class="bg-white shadow-sm relative z-50">
     <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
       <!-- Logo -->
@@ -36,11 +36,6 @@
                 @click="handleDropdownClick(item.label, item.to)"
               >
                 {{ item.label }}
-                <Icon 
-                  name="heroicons:chevron-down" 
-                  class="w-3 h-3 transition-transform duration-300"
-                  :class="{ 'rotate-180': dropdownStates[item.label] }"
-                />
               </button>
 
               <!-- Dropdown Menu -->
@@ -54,7 +49,7 @@
                       v-for="(subItem, idx) in item.dropdown"
                       :key="idx"
                       :to="subItem.to"
-                      class="dropdown-item block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#42529F] rounded-md transition-all duration-200 font-medium"
+                      class="dropdown-item block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#42529F] rounded-md transition-all duration-200 font-medium whitespace-nowrap"
                       @click="closeDropdown(item.label)"
                     >
                       {{ subItem.label }}
@@ -199,21 +194,25 @@ const navItems = [
   { label: "About", to: "/about" },
   { 
     label: "Admissions", 
-    to: "/",
+    to: "/admissions",
     hasDropdown: true,
     dropdown: [
-      // { label: "Admissions Overview", to: "/admissions" },
-      { label: "Early Years Program", to: "/admissions/early-years" },
-      { label: "Primary School", to: "/admissions/primary" },
-      { label: "Secondary School", to: "/admissions/secondary" },
-      { label: "Apply Now", to: "/admissions/apply" },
-      { label: "Tuition & Financial Aid", to: "/admissions/tuition" }
+      { label: "A Nurturing Community", to: "/admissions/community" },
+      { label: "Application Process", to: "/admissions/application-process" },
+      { label: "Apply Now", to: "/admissions" },
+      { label: "Tuition & Financial Aid", to: "/admissions" }
     ]
   },
-  { label: "Academics", to: "/academics" },
-  { label: "Arts", to: "/arts" },
-  { label: "Athletics", to: "/athletics" },
-  { label: "Giving", to: "/giving" }
+  { label: "Academics", to: "/academics", hasDropdown: true,
+    dropdown: [
+      { label: "Early Years Foundation Stage (EYFS)", to: "/academics/early-years" },
+      { label: "Primary School (Keystages 1 and 2)", to: "/academics/primary" },
+      { label: "Secondary School (Keystages 3 and 4)", to: "/academics/secondary" },
+      { label: "Activities & Clubs", to: "/academics/clubs" },
+    ] },
+  { label: "Arts", to: "/" },
+  { label: "Athletics", to: "/" },
+  { label: "Giving", to: "/" }
 ]
 
 // Methods
@@ -380,15 +379,14 @@ watch(() => route.path, () => {
 .dropdown-menu {
   border-top: 8px solid #42529F !important;
   border-radius: 0px !important;
-  min-width: 300px !important;
+  min-width: 400px !important;
   width: max-content;
-  max-width: 800px;
 }
 
 .dropdown-content {
   flex: 1;
-  min-width: 250px;
-  max-width: 350px;
+  min-width: 300px;
+  max-width: none;
 }
 
 .dropdown-image-container {
@@ -411,6 +409,7 @@ watch(() => route.path, () => {
   border-radius: 6px;
   font-weight: 500;
   position: relative;
+  white-space: nowrap;
 }
 
 .dropdown-item:hover {
@@ -482,7 +481,7 @@ watch(() => route.path, () => {
 /* Responsive dropdown adjustments */
 @media (max-width: 1024px) {
   .dropdown-menu {
-    max-width: 600px;
+    min-width: 350px !important;
   }
   
   .dropdown-image {
