@@ -39,7 +39,7 @@
   import { ref } from "vue";
 
   // List your video URLs (in public folder)
-  const videos = ["video.mp4"];
+  const videos = ["https://res.cloudinary.com/dv4kgir1a/video/upload/WhatsApp_Video_2025-07-08_at_15.00.42_duk8gi.mp4"];
 
   const activeIndex = ref(0);
 
